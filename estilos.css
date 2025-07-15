@@ -116,4 +116,12 @@ footer.egreso {
 }
 #malla {
   display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+}
+
+.año {
+  width: 350px; /* o ajusta según el espacio */
+  flex-shrink: 0;
 }
