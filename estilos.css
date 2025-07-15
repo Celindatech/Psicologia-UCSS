@@ -26,16 +26,13 @@ h1 {
 
 .ciclo {
   display: flex;
-  flex-direction: column;
-  align-items: center; /* Centra cada curso */
+  flex-wrap: wrap;
   gap: 10px;
   margin-bottom: 20px;
 }
 
 
 .ramo {
-  width: 100%;
-  max-width: 400px;
   background-color: #ffe6f0;
   border: 2px solid #d63384;
   border-radius: 8px;
@@ -119,6 +116,4 @@ footer.egreso {
 }
 #malla {
   display: flex;
-  flex-direction: column;
-  align-items: center;
 }
