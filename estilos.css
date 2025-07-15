@@ -103,9 +103,9 @@ button#reiniciar:hover {
   color: white;
 }
 footer.egreso {
-  animation: saltar 0.6s infinite alternate ease-in-out;
+  animation: saltar 0.6s infinite alternate;
   font-size: 1.5em;
-  color: #880e4f;
+  color: #d63384;
 }
 
 @keyframes saltar {
