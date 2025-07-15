@@ -76,3 +76,23 @@ footer {
   font-weight: bold;
   border-radius: 10px;
 }
+button#reiniciar {
+  display: block;
+  margin: 0 auto 20px;
+  padding: 10px 20px;
+  background-color: #ff66b2;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+button#reiniciar:hover {
+  background-color: #cc4d99;
+}
+
+.ramo {
+  transition: transform 0.2s, background-color 0.3s, opacity 0.3s;
+}
