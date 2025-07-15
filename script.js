@@ -96,6 +96,7 @@ cursos.push(
   { nombre: "Inglés X", codigo: "ING10", tipo: "O", creditos: 1, requisitos: [], ciclo: 10, año: 5 }
 );
 let aprobados = new Set();
+let confetiLanzado = false;
 
 function crearMalla() {
   const contenedor = document.getElementById("malla");
@@ -110,13 +111,17 @@ function crearMalla() {
     añoDiv.appendChild(titulo);
 
     const ciclos = cursos.filter(c => c.año === año)
-                         .reduce((acc, c) => {
-                           acc[c.ciclo] = acc[c.ciclo] || [];
-                           acc[c.ciclo].push(c);
-                           return acc;
-                         }, {});
+      .reduce((acc, c) => {
+        acc[c.ciclo] = acc[c.ciclo] || [];
+        acc[c.ciclo].push(c);
+        return acc;
+      }, {});
 
     Object.entries(ciclos).forEach(([ciclo, cursosCiclo]) => {
+      const subtitulo = document.createElement("h3");
+      subtitulo.textContent = `Ciclo ${ciclo}`;
+      añoDiv.appendChild(subtitulo);
+
       const cicloDiv = document.createElement("div");
       cicloDiv.className = "ciclo";
 
@@ -124,7 +129,49 @@ function crearMalla() {
         const div = document.createElement("div");
         div.className = "ramo bloqueado";
         div.dataset.codigo = curso.codigo;
-let confetiLanzado = false;
+        if (curso.tipo === "E") div.classList.add("electivo");
+        div.innerHTML = `<strong>${curso.nombre}</strong><br>
+                         <span class="creditos">${curso.creditos} créditos</span>`;
+
+        div.addEventListener("click", () => {
+          if (!div.classList.contains("bloqueado")) {
+            div.classList.toggle("aprobado");
+            if (div.classList.contains("aprobado")) {
+              aprobados.add(curso.codigo);
+            } else {
+              aprobados.delete(curso.codigo);
+            }
+            actualizarEstadoCursos();
+            verificarEgreso();
+          }
+        });
+
+        cicloDiv.appendChild(div);
+      });
+
+      añoDiv.appendChild(cicloDiv);
+    });
+
+    contenedor.appendChild(añoDiv);
+  });
+
+  actualizarEstadoCursos();
+}
+
+function actualizarEstadoCursos() {
+  cursos.forEach(curso => {
+    const div = document.querySelector(`[data-codigo="${curso.codigo}"]`);
+    const cumplidos = curso.requisitos.every(r => aprobados.has(r));
+
+    if (cumplidos) {
+      div.classList.remove("bloqueado");
+    } else {
+      div.classList.add("bloqueado");
+      div.classList.remove("aprobado");
+      aprobados.delete(curso.codigo);
+    }
+  });
+}
 
 function verificarEgreso() {
   const totalCreditos = cursos
@@ -141,7 +188,8 @@ function verificarEgreso() {
   }
 
   if (totalCreditos >= 226 && electivosAprobados >= 2) {
-    footer.textContent = "✅ ¡Requisitos de egreso cumplidos! Puedes titularte 🎓";
+    footer.textContent = "🎓 ¡Puedes egresar!";
+    footer.classList.add("egreso");
 
     if (!confetiLanzado && typeof confetti === "function") {
       lanzarConfeti();
@@ -149,6 +197,7 @@ function verificarEgreso() {
     }
   } else {
     footer.textContent = `Créditos: ${totalCreditos}/226 | Electivos aprobados: ${electivosAprobados}/2`;
+    footer.classList.remove("egreso");
     confetiLanzado = false;
   }
 }
@@ -185,81 +234,4 @@ document.getElementById("reiniciar").addEventListener("click", () => {
   crearMalla();
 });
 
-        if (curso.tipo === "E") div.classList.add("electivo");
-
-        div.innerHTML = `<strong>${curso.nombre}</strong><br>
-                         <span class="creditos">${curso.creditos} créditos</span>`;
-
-        div.addEventListener("click", () => {
-          if (!div.classList.contains("bloqueado")) {
-            div.classList.toggle("aprobado");
-            if (div.classList.contains("aprobado")) {
-              aprobados.add(curso.codigo);
-            } else {
-              aprobados.delete(curso.codigo);
-            }
-            actualizarEstadoCursos();
-            verificarEgreso();
-          }
-        });
-
-        cicloDiv.appendChild(div);
-      });
-
-      const subtitulo = document.createElement("h3");
-      subtitulo.textContent = `Ciclo ${ciclo}`;
-      añoDiv.appendChild(subtitulo);
-      añoDiv.appendChild(cicloDiv);
-    });
-
-    contenedor.appendChild(añoDiv);
-  });
-
-  actualizarEstadoCursos();
-}
-
-function actualizarEstadoCursos() {
-  cursos.forEach(curso => {
-    const div = document.querySelector(`[data-codigo="${curso.codigo}"]`);
-    const cumplidos = curso.requisitos.every(r => aprobados.has(r));
-
-    if (cumplidos) {
-      div.classList.remove("bloqueado");
-    } else {
-      div.classList.add("bloqueado");
-      div.classList.remove("aprobado");
-      aprobados.delete(curso.codigo);
-    }
-  });
-}
-
-let confetiLanzado = false;
-
-function verificarEgreso() {
-  const totalCreditos = cursos
-    .filter(c => aprobados.has(c.codigo))
-    .reduce((suma, c) => suma + c.creditos, 0);
-
-  const electivosAprobados = cursos
-    .filter(c => c.tipo === "E" && aprobados.has(c.codigo)).length;
-
-  let footer = document.querySelector("footer");
-  if (!footer) {
-    footer = document.createElement("footer");
-    document.body.appendChild(footer);
-  }
-
-  if (totalCreditos >= 226 && electivosAprobados >= 2) {
-    footer.textContent = "🎓 ¡Puedes egresar!";
-    footer.classList.add("egreso");
-
-    if (!confetiLanzado && typeof confetti === "function") {
-      lanzarConfeti();
-      confetiLanzado = true;
-    }
-  } else {
-    footer.textContent = `Créditos: ${totalCreditos}/226 | Electivos aprobados: ${electivosAprobados}/2`;
-    footer.classList.remove("egreso");
-    confetiLanzado = false;
-  }
-}
+crearMalla(); // 👈 Este es el que inicia todo
