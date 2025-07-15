@@ -98,7 +98,7 @@ button#reiniciar:hover {
 }
 /* Electivos aprobados: combinamos .electivo y .aprobado */
 .ramo.electivo.aprobado {
-  background-color: #f48fb1; /* rosa fuerte */
-  border-color: #880e4f;
+  background-color: #f48fb1 !important;
+  border-color: #880e4f !important;
   color: white;
 }
