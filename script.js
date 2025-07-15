@@ -233,6 +233,8 @@ function actualizarEstadoCursos() {
   });
 }
 
+let confetiLanzado = false;
+
 function verificarEgreso() {
   const totalCreditos = cursos
     .filter(c => aprobados.has(c.codigo))
@@ -248,33 +250,16 @@ function verificarEgreso() {
   }
 
   if (totalCreditos >= 226 && electivosAprobados >= 2) {
-    footer.textContent = "✅ ¡Requisitos de egreso cumplidos! Puedes titularte 🎓";
+    footer.textContent = "🎓 ¡Puedes egresar!";
+    footer.classList.add("egreso");
+
+    if (!confetiLanzado && typeof confetti === "function") {
+      lanzarConfeti();
+      confetiLanzado = true;
+    }
   } else {
     footer.textContent = `Créditos: ${totalCreditos}/226 | Electivos aprobados: ${electivosAprobados}/2`;
+    footer.classList.remove("egreso");
+    confetiLanzado = false;
   }
-}
-
-crearMalla();
-function lanzarConfeti() {
-  const duration = 5000;
-  const end = Date.now() + duration;
-
-  (function frame() {
-    confetti({
-      particleCount: 5,
-      angle: 60,
-      spread: 55,
-      origin: { x: 0 }
-    });
-    confetti({
-      particleCount: 5,
-      angle: 120,
-      spread: 55,
-      origin: { x: 1 }
-    });
-
-    if (Date.now() < end) {
-      requestAnimationFrame(frame);
-    }
-  })();
 }
