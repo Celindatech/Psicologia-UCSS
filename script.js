@@ -124,6 +124,66 @@ function crearMalla() {
         const div = document.createElement("div");
         div.className = "ramo bloqueado";
         div.dataset.codigo = curso.codigo;
+let confetiLanzado = false;
+
+function verificarEgreso() {
+  const totalCreditos = cursos
+    .filter(c => aprobados.has(c.codigo))
+    .reduce((suma, c) => suma + c.creditos, 0);
+
+  const electivosAprobados = cursos
+    .filter(c => c.tipo === "E" && aprobados.has(c.codigo)).length;
+
+  let footer = document.querySelector("footer");
+  if (!footer) {
+    footer = document.createElement("footer");
+    document.body.appendChild(footer);
+  }
+
+  if (totalCreditos >= 226 && electivosAprobados >= 2) {
+    footer.textContent = "✅ ¡Requisitos de egreso cumplidos! Puedes titularte 🎓";
+
+    if (!confetiLanzado && typeof confetti === "function") {
+      lanzarConfeti();
+      confetiLanzado = true;
+    }
+  } else {
+    footer.textContent = `Créditos: ${totalCreditos}/226 | Electivos aprobados: ${electivosAprobados}/2`;
+    confetiLanzado = false;
+  }
+}
+
+function lanzarConfeti() {
+  const duration = 5000;
+  const end = Date.now() + duration;
+
+  (function frame() {
+    confetti({
+      particleCount: 5,
+      angle: 60,
+      spread: 55,
+      origin: { x: 0 }
+    });
+    confetti({
+      particleCount: 5,
+      angle: 120,
+      spread: 55,
+      origin: { x: 1 }
+    });
+
+    if (Date.now() < end) {
+      requestAnimationFrame(frame);
+    }
+  })();
+}
+
+document.getElementById("reiniciar").addEventListener("click", () => {
+  aprobados.clear();
+  confetiLanzado = false;
+  document.querySelector("#malla").innerHTML = "";
+  if (document.querySelector("footer")) document.querySelector("footer").remove();
+  crearMalla();
+});
 
         if (curso.tipo === "E") div.classList.add("electivo");
 
