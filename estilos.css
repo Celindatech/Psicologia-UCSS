@@ -1,0 +1,78 @@
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #fff0f5;
+  margin: 0;
+  padding: 20px;
+  color: #333;
+}
+
+h1 {
+  color: #d63384;
+  text-align: center;
+}
+
+.leyenda {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.año {
+  border: 2px solid #ffc0cb;
+  border-radius: 10px;
+  margin: 20px 0;
+  padding: 10px;
+  background: #fff;
+}
+
+.ciclo {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.ramo {
+  background-color: #ffe6f0;
+  border: 2px solid #d63384;
+  border-radius: 8px;
+  padding: 10px;
+  cursor: pointer;
+  flex: 1 1 180px;
+  position: relative;
+  transition: transform 0.2s;
+}
+
+.ramo:hover {
+  transform: scale(1.05);
+}
+
+.ramo.bloqueado {
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+.ramo.aprobado {
+  background-color: #f8bbd0;
+  border-color: #ad1457;
+}
+
+.ramo.electivo {
+  border-color: #800080;
+  background-color: #fce4ec;
+}
+
+.creditos {
+  display: block;
+  font-size: 0.8em;
+  margin-top: 4px;
+  color: #555;
+}
+
+footer {
+  margin-top: 30px;
+  padding: 20px;
+  background-color: #ffc0cb;
+  text-align: center;
+  font-weight: bold;
+  border-radius: 10px;
+}
